@@ -24,7 +24,7 @@ Like all probabilistic problems work only on large sample sizes. Even if you swa
 Also note:
 The problem was named after American TV host Monty Python whose show (Let's Make a Deal) had a *similar* setup.
 The winning door held a car, the two others a goat each. The reason why I don't follow the usual naming convention
-(i.e. car, goat) and use winner/not winner dichotomy instead is not only because the show's selection part was a bit
+(i.e. car, goat) and use winner/loser dichotomy instead is not only because the show's selection part was a bit
 different from the (in)famous Monty Hall Paradox.
 I did so mostly because I would't give a f.ck about the car if I could have a cute goat instead. 
 '''
@@ -34,38 +34,87 @@ import random
 
 # Creating three doors, arbitrarily choosing the winner (door A). It doesn't have to be randomized so it can be hard coded.
 door_dict = {
-    "door_A": True, # The winner
-    "door_B": False, # Not the winner
-    "door_C": False, # Not the winner
+    "door_A": True,     # The winner
+    "door_B": False,    # One of the losers
+    "door_C": False,    # One of the losers
 }
 door_list = list(door_dict.keys())
 
-# Setting the number of simulation cycles
-cycles = int(input("How many times should I run the simulation? "))
-
+'''
+!!!!!!!! FUNCTIONS ARE DEFINED HERE !!!!!!!!
+'''
 # Let the player choose a door (chosen_door). The remaining doors will be in the other_doors list.
-chosen_door = random.choice(list(door_list))
-other_doors = []
-for door in door_list:
-    if door != chosen_door:
-        other_doors.append(door)
+def choose_door():
+    return random.choice(list(door_list))
+    
+def set_other_doors():
+    for door in door_list:
+        if door != chosen_door:
+            other_doors.append(door)
 
 # Open one of the remaining doors. It shouldn't be the winner! (Technically: remove (one of) the non-winning one(s) from the other_doors list.
 # If both of the remaining doors are non-winners, it doesn't matter which one is chosen.
 # If I develop this further for n number of doors, I would either keep the winner among the other_doors, or if none of them are winners, it would just pick one randomly.
-for i in other_doors:
-    if door_dict[i] == False:
-        other_doors.remove(i)
+
+def alternative_door():
+    for i in other_doors:
+        if door_dict[i] == False:
+            other_doors.remove(i)
 
 # Now the player can decide if she switches between the two doors. She's a cold headed rational creature. So she flips a coin every time to make up her mind. :)
-switch = bool(random.getrandbits(1))
+def switch_doors():
+    return bool(random.getrandbits(1))
+    
+def check_winner():
+    if chosen_door == "door_A":
+        return True
+    else:
+        return False
 
-print("The original choice was: " + chosen_door + ".") # Let's check if it works so far.
-if switch == True:
-    print("I change my mind and pick the other door.")
-else:
-    print("I stick to my original choice.")
-if switch == True:
-    chosen_door = other_doors[0]
+'''
+!!!!!!!! SIMULATION CYCLES START HERE
+'''
 
-print("So my final answer is: " + chosen_door + ".")
+# Setting the number of simulation cycles
+cycles = int(input("How many times should I run the simulation? "))
+
+#Store cycle results in a list where each element will be a list of [switch boolean, win boolean].
+swin = 0       # Switch is true, win is true
+swose = 0      # Switch is true, win is false
+noswin = 0     # Switch is false, win is true
+noswose = 0    # Switch is false, win is false
+
+i = 0
+while i < cycles:
+    chosen_door = choose_door()
+    other_doors = []
+    set_other_doors()
+    alternative_door()
+
+    switch = switch_doors()
+
+# Let's count each possible outcome.
+
+    if switch == True:
+        chosen_door = other_doors[0]  
+
+    #print(chosen_door, other_doors, switch, check_winner())
+    
+    if switch == True and check_winner() == True:
+        swin = swin + 1
+    elif switch == True and check_winner() == False:
+        swose = swose + 1
+    elif switch == False and check_winner() == True:
+        noswin = noswin + 1
+    else:
+        noswose = noswose + 1
+    i += 1
+
+print("Switched and won: " + str(swin) + " times.")
+print("Switched and lost: " + str(swose) + " times.")
+print("Didn't switch and won: " + str(noswin) + " times.")
+print("Didn't switch and lost: " + str(noswose) + " times.")
+print()
+print("Therefore your chance of winning is " + str(round((swin / noswin), 2)) + " times higher if you switch than if you stick to your orignial choice.")
+print("Similarly, your chance of losing is " + str(round((noswose / swose), 2)) + " times higher if you stick to your original choice than if you switch.")
+
