@@ -16,6 +16,6 @@ The choosen door has 1/3 of a chance to be the winner while the other two have 2
 Like all probabilistic problems work only on large sample sizes. Even if you swap, you still have only a ~66.6% chance of winning. Which is still quite slim. 
 
 ## Also note :goat:
-The problem was named after American TV host Monty Python whose show (Let's Make a Deal) had a *similar* setup. The winning door held a car, the two others a goat each. The reason why I don't follow the usual naming convention (i.e. car, goat) and use winner/loser dichotomy instead is not only because the show's selection part was a bit different from the (in)famous Monty Hall Paradox.
+The problem was named after American TV host Monty Python whose show (Let's Make a Deal) had a *similar* setup. The winning door held a car, the two other ones a goat each. The reason why I don't follow the usual naming convention (i.e. car, goat) and use winner/loser dichotomy instead is not only because the show's selection part was a bit different from the (in)famous Monty Hall Paradox.
 
 **I did so mostly because I would't give a f.ck about the car if I could have a cute goat instead.** 
